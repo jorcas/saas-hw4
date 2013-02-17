@@ -63,5 +63,18 @@ class MoviesController < ApplicationController
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
   end
+  
+  def similar
+    id = params[:id] # retrieve movie ID from URI route
+    movie = Movie.find(id) # look up movie by unique ID
+    # check movie director field is not empty 
+    if movie.director.empty?
+      flash[:notice] = "Movie '#{movie.title}' has no director info."
+      redirect_to movies_path
+    else
+      @movies = Movie.find_all_by_director(movie.director)
+      # will render app/views/movies/similar.<extension> by default
+    end
+  end
 
 end
